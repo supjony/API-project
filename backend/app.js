@@ -101,3 +101,9 @@ app.use((err, _req, res, _next) => {
 
 
 module.exports = app;
+
+
+
+
+
+// npx sequelize-cli model:generate --name User --attributes username:string,email:string,hashedPassword:string
