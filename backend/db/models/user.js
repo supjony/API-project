@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: {
         type: DataTypes.STRING,
-        
+
       },
       lastName: {
         type: DataTypes.STRING,
@@ -58,3 +58,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   return User;
 };
+
+
+
+
+// npx sequelize model:generate --name ReviewImages --attributes reviewId:integer,url:string
