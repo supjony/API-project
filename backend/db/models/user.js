@@ -62,4 +62,4 @@ module.exports = (sequelize, DataTypes) => {
 
 
 
-// npx sequelize model:generate --name Review --attributes spotId:integer,userId:integer,review:string,stars:integer
+// npx sequelize model:generate --name Spot --attributes ownerId:integer,address:string,city:string,state:string,country:string,lat:decimal,lng:decimal,name:string,description:string,price:decimal
