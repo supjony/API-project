@@ -42,6 +42,20 @@ router.post(
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
+      // if(!username && email) {
+      //   res.status(403);
+      //   res.json({
+
+      //     "message": "User already exists",
+      //     "statusCode": 403,
+      //     "errors": [
+      //       "User with that email already exists"
+      //     ]
+
+      //  });
+      //      return next(err);
+      // }
+
       const safeUser = {
         id: user.id,
         firstName: user.firstName,

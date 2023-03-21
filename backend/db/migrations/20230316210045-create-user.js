@@ -21,7 +21,7 @@ module.exports = {
       },
       lastName: {
         type: Sequelize.STRING(30),
-        
+
         unique: true
       },
       username: {
