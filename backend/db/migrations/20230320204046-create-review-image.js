@@ -22,15 +22,17 @@ module.exports = {
 
       },
       url: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(30)
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
   },
@@ -40,9 +42,21 @@ module.exports = {
     return queryInterface.dropTable(options);
   }
 
-  // async down(queryInterface, Sequelize) {
-  //   // await queryInterface.dropTable('ReviewImages');
-  //   options.tableName = "ReviewImages";
-  //   return queryInterface.dropTable(options);
-  // }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+// async down(queryInterface, Sequelize) {
+//   // await queryInterface.dropTable('ReviewImages');
+//   options.tableName = "ReviewImages";
+//   return queryInterface.dropTable(options);
+// }
