@@ -12,7 +12,7 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         ownerId: 1,
-        adress: '1 mission st',
+        address: '1 mission st',
         city: "San francisco 1",
         state: "CA 1",
         country: "USA 1",
@@ -24,7 +24,7 @@ module.exports = {
       },
       {
         ownerId: 2,
-        adress: '2 mission st',
+        address: '2 mission st',
         city: "San francisco 2",
         state: "CA 2",
         country: "USA 2",
@@ -36,7 +36,7 @@ module.exports = {
       },
       {
         ownerId: 3,
-        adress: '3 mission st',
+        address: '3 mission st',
         city: "San francisco 3",
         state: "CA 3",
         country: "USA 3",
@@ -57,3 +57,8 @@ module.exports = {
     }, {});
   }
 };
+
+
+
+// npx sequelize-cli model:generate --name Spot --attributes ownerId:integer,address:string,city:string,state:string,country:string,lat:d
+// ecimal,lng:decimal,name:string,description:string,price:decimal
