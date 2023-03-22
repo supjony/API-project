@@ -28,8 +28,10 @@ const validateSignup = [
       .exists({ checkFalsy: true })
       .isLength({ min: 6 })
       .withMessage('Password must be 6 characters or more.'),
-    handleValidationErrors
+      handleValidationErrors
   ];
+
+
 
 
 
@@ -40,21 +42,45 @@ router.post(
     async (req, res) => {
       const { firstName, lastName, email, password, username } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
+
+
+      const emailExists = await User.findOne({ where: { email: email } })
+      if(emailExists){
+        res.status(403);
+        res.json({
+
+          message: "User already exists",
+          statusCode: 403,
+          errors: [
+    "User with that email already exists"
+  ]
+
+       });
+           return next(err);
+      }
+
+
+      const userNameExists = await User.findOne({ where: { username: username } })
+      if(userNameExists){
+        res.status(403);
+        res.json({
+
+          message: "User already exists",
+          statusCode: 403,
+          errors: [
+          "User with that username already exists"
+  ]
+
+       });
+           return next(err);
+      }
+
+
+
       const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
-      // if(!username && email) {
-      //   res.status(403);
-      //   res.json({
 
-      //     "message": "User already exists",
-      //     "statusCode": 403,
-      //     "errors": [
-      //       "User with that email already exists"
-      //     ]
 
-      //  });
-      //      return next(err);
-      // }
 
       const safeUser = {
         id: user.id,
@@ -62,6 +88,7 @@ router.post(
         lastName: user.lastName,
         email: user.email,
         username: user.username,
+        token: '',
       };
 
       await setTokenCookie(res, safeUser);
