@@ -310,7 +310,7 @@ router.put('/:spotId', requireAuth, validateCreateASpot, async(req, res) => {
 
 
 router.delete('/:spotId', requireAuth, async (req, res) => {
-    let currentUser = req.user.id;
+    let user = req.user.id;
 
     let spot = await Spot.findByPk(req.params.spotId);
 
@@ -320,7 +320,7 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
           })
     }
 
-    if (currentUser !== spot.ownerId) {
+    if (user !== spot.ownerId) {
         return res.status(403).json({
             message: 'cannot delete posts that are not yours!',
         })
