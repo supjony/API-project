@@ -2,11 +2,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Spot, Review, SpotImage, sequelize } = require('../../db/models');
+const { Spot, Review, SpotImage, sequelize, User } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const review = require('../../db/models/review');
+const user = require('../../db/models/user');
 
 const router = express.Router();
 
@@ -80,37 +81,97 @@ aggregates.reviews = reviews.toJSON().avgRating;
 
 
 
-// const toySummary = await Toy.findAll({
-//     attributes: [
-//         [
-//             sequelize.fn('AVG', sequelize.col('price')),
-//             'averagePriceOfAToy'
-//         ]
-//     ]
-// });
+router.get('/:spotId', async (req, res) => {
+    let spot = await Spot.findByPk(req.params.spotId);
+    const payload = []
+    spotsObj = {}
+        if (!spot) {
+            res.status(404);
+            res.json({
+
+                message: "Spot couldn't be found",
+                statusCode: 404
 
 
-// app.get('/bands-lazy', async (req, res, next) => {
-//     const allBands = await Band.findAll({ order: [ ['name'] ] })
-//     const payload = [];
-//     for(let i = 0; i < allBands.length; i++){
-//         const band = allBands[i];
-//         //!!START
-//         const bandMembers = await band.getMusicians({ order: [ ['firstName'] ] });
-//         //!!END
-//         const bandData = {
-//             id: band.id,
-//             name: band.name,
-//             createdAt: band.createdAt,
-//             updatedAt: band.updatedAt,
-//             //!!START
-//             Musicians: bandMembers
-//             //!!END
-//         };
-//         payload.push(bandData);
-//     }
-//     res.json(payload)
-// });
+           });
+        }
+
+        const aggregates = {};
+        const reviews = await Review.findOne({
+            attributes: [
+                [
+                    sequelize.fn('AVG', sequelize.col('stars')),
+                    'avgRating'
+                ],
+                [
+                    sequelize.fn('COUNT', sequelize.col('stars')),
+                    'numReviews'
+                ]
+            ],
+            where: { spotId: spot.id }
+        });
+
+        const reviewsCount = await Review.findOne({
+            attributes: [
+
+                [
+                    sequelize.fn('COUNT', sequelize.col('stars')),
+                    'numReviews'
+                ]
+            ],
+            where: { spotId: spot.id }
+        });
+
+        const spotimages = await SpotImage.findAll({
+            attributes: ['id', 'url', 'preview'],
+            where: { spotId: spot.id }
+        })
+
+        // const owner = await User.findOne({
+        //     attributes: ['id', 'firstName', 'lastName'],
+        //     where: { ownerId: user.id }
+        // })
+        let owner = await spot.getUser({
+            attributes: ['id', 'firstName', 'lastName']
+        })
+
+
+aggregates.reviews = reviews.toJSON().avgRating;
+aggregates.reviewsCount = reviews.toJSON().avgRating;
+
+
+
+
+        const spotData = {
+
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            description: spot.description,
+            price: spot.price,
+            createdAt: spot.createdAt,
+            updatedAt: spot.updatedAt,
+            avgRating: aggregates.reviews,
+            numReviews: aggregates.reviewsCount,
+            SpotImages: spotimages,
+            Owner: owner
+
+
+        // payload.push(spotData)
+        // spotsObj['Spots'] = payload
+
+    }
+    res.json(spotData)
+});
+
+
+
 
 
 
