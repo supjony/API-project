@@ -86,11 +86,10 @@ router.post(
         res.json({
 
           message: "Validation error",
-          statusCode: 400,
-          errors: [
-            "Email or username is required",
-            "Password is required"
-          ]
+          errors: {
+            credential: "Email or username is required",
+            password: "Password is required"
+          }
 
        });
            return next(err);
@@ -130,7 +129,6 @@ router.post(
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        token: ""
       };
 
       await setTokenCookie(res, safeUser);

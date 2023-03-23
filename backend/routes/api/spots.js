@@ -12,6 +12,41 @@ const user = require('../../db/models/user');
 const router = express.Router();
 
 
+const validateCreateASpot = [
+    check('address')
+      .exists({ checkFalsy: true })
+      .withMessage('Street address is required.'),
+    check('city')
+      .exists({ checkFalsy: true })
+      .withMessage('City is required'),
+    check('state')
+       .exists({ checkFalsy: true })
+      .withMessage('State is required.'),
+    check('country')
+      .exists({ checkFalsy: true })
+      .withMessage('Country is required.'),
+      check('lat')
+      .exists({checkFalsy: true})
+      .isNumeric()
+      .withMessage('Latitude is not valid'),
+      check('lng')
+      .exists({checkFalsy: true})
+      .isNumeric()
+      .withMessage('Longitude is not valid'),
+      check('name')
+      .exists({checkFalsy: true})
+      .isLength({max: 50})
+      .withMessage("Name must be less than 50 characters"),
+      check('description')
+      .exists({checkFalsy: true})
+      .withMessage("Description is required"),
+      check('price')
+      .exists({checkFalsy: true})
+      .isNumeric()
+      .withMessage("Price per day is required"),
+    handleValidationErrors
+  ];
+
 
 
 
@@ -89,8 +124,7 @@ router.get('/:spotId', async (req, res) => {
             res.status(404);
             res.json({
 
-                message: "Spot couldn't be found",
-                statusCode: 404
+                message: "Spot couldn't be found"
 
 
            });
@@ -173,10 +207,58 @@ aggregates.reviewsCount = reviews.toJSON().avgRating;
 
 
 
+router.post('/', requireAuth, validateCreateASpot, async (req, res) => {
+    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+
+    const { user } = req;
+
+    let creatSpot = await user.createSpot({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    })
+    res.status(201).json(creatSpot);
+})
 
 
 
 
+
+
+router.post('/:spotId/images', requireAuth, async (req, res) => {
+
+    const {url, preview} = req.body;
+
+
+
+    let spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+          })
+    }
+
+
+    let image = await spot.createSpotImage({
+        url,
+        preview
+    })
+
+
+
+    res.status(200).json({
+        id: image.id,
+        url: image.url,
+        preview: image.preview
+    })
+})
 
 
 

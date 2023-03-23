@@ -15,7 +15,7 @@ const validateSignup = [
     check('email')
       .exists({ checkFalsy: true })
       .isEmail()
-      .withMessage('Please provide a valid email.'),
+      .withMessage('Invalid email'),
     check('username')
       .exists({ checkFalsy: true })
       .isLength({ min: 4 })
@@ -46,14 +46,13 @@ router.post(
 
       const emailExists = await User.findOne({ where: { email: email } })
       if(emailExists){
-        res.status(403);
+        res.status(500);
         res.json({
 
           message: "User already exists",
-          statusCode: 403,
-          errors: [
-    "User with that email already exists"
-  ]
+          errors: {
+    email: "User with that email already exists"
+          }
 
        });
            return next(err);
@@ -62,14 +61,13 @@ router.post(
 
       const userNameExists = await User.findOne({ where: { username: username } })
       if(userNameExists){
-        res.status(403);
+        res.status(500);
         res.json({
 
           message: "User already exists",
-          statusCode: 403,
-          errors: [
-          "User with that username already exists"
-  ]
+          errors: {
+          username: "User with that username already exists"
+          }
 
        });
            return next(err);
@@ -88,7 +86,6 @@ router.post(
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        token: '',
       };
 
       await setTokenCookie(res, safeUser);
