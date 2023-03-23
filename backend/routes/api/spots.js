@@ -235,6 +235,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 
     const {url, preview} = req.body;
 
+    let user = req.user.id;
 
 
     let spot = await Spot.findByPk(req.params.spotId);
@@ -243,6 +244,13 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         return res.status(404).json({
             "message": "Spot couldn't be found",
           })
+    }
+
+
+    if (user !== spot.ownerId) {
+        return res.status(403).json({
+            message: 'this is not your account to post!',
+        })
     }
 
 
@@ -264,7 +272,66 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 
 
 
+router.put('/:spotId', requireAuth, validateCreateASpot, async(req, res) => {
+    let user = req.user.id;
 
+    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+
+    let spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+          })
+    }
+
+
+    if (user !== spot.ownerId) {
+        return res.status(403).json({
+            message: 'this is not your account to edit!',
+        })
+    }
+
+
+    let newSpot = await spot.update({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    })
+    res.status(200).json(newSpot)
+})
+
+
+
+router.delete('/:spotId', requireAuth, async (req, res) => {
+    let currentUser = req.user.id;
+
+    let spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found"
+          })
+    }
+
+    if (currentUser !== spot.ownerId) {
+        return res.status(403).json({
+            message: 'cannot delete posts that are not yours!',
+        })
+    }
+
+    await spot.destroy();
+
+    res.status(200).json({
+  "message": "Successfully deleted",
+})
+})
 
 
 
