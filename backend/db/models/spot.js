@@ -13,16 +13,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       // Spot.belongsToMany(models.User, {through: models.Review});
       // Spot.belongsToMany(models.User, {through: models.Booking});
-      Spot.belongsTo(models.User, {foreignKey: "ownerId"})
-      Spot.hasMany(models.SpotImage, {foreignKey: "spotId"})
-      Spot.hasMany(models.Review, {foreignKey: "spotId"})
-      Spot.hasMany(models.Booking, {foreignKey: "spotId"})
+      // Spot.belongsTo(models.User, {foreignKey: "ownerId"})
+      // Spot.hasMany(models.Review, {foreignKey: "spotId"})
+      // Spot.hasMany(models.Booking, {foreignKey: "spotId"})
+      // Spot.hasMany(models.SpotImage, {foreignKey: "spotId"})
+
+      Spot.hasMany(models.Review, {foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true});
+      Spot.hasMany(models.Booking, {foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true});
+      Spot.hasMany(models.SpotImage, {foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true});
+      Spot.belongsTo(models.User, {foreignKey: 'ownerId'})
 
 
     }
   }
   Spot.init({
-    ownerId: DataTypes.INTEGER,
+    ownerId: {
+      type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
     address: DataTypes.STRING,
     city: DataTypes.STRING,
     state: DataTypes.STRING,
