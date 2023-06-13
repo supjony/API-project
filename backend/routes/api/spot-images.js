@@ -8,7 +8,10 @@ const { Spot, SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
-
+router.get('/imageId', async (req, res, next)=> {
+    const spotimages = SpotImage.findByPk(req.params.imageId)
+    res.json(spotimages)
+})
 
 
 router.delete('/imageId', requireAuth, async (req, res, next) => {
@@ -30,7 +33,7 @@ router.delete('/imageId', requireAuth, async (req, res, next) => {
         next(error)
     }
 
-    await image.destory()
+    await spotImage.destory()
 
     res.json({
         message: "Successfully deleted"
