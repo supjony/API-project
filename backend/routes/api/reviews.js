@@ -40,9 +40,9 @@ router.get('/current', requireAuth, async(req, res) => {
                 review.Spot.dataValues.previewImage = spotImage.url
             }
         }
-        // if (!review.Spot.dataValues.previewImage) {
-        //     review.Spot.dataValues.previewImage = 'no preview'
-        // }
+        if (!review.Spot.dataValues.previewImage) {
+            delete review.Spot.dataValues.previewImage
+        }
         Reviews.push(review.toJSON())
     }
 

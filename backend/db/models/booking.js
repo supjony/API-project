@@ -32,8 +32,14 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Users'
       }
     },
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Booking',
