@@ -133,19 +133,19 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
 })
 
-const validateCreateReviewForASpot = [
-    check('review')
-      .exists({ checkFalsy: true })
-      .withMessage('Review text is required.'),
-    check('stars')
-      .exists({ checkFalsy: true })
-      .isNumeric()
-      .withMessage('Stars must be an integer from 1 to 5.'),
-    handleValidationErrors
-  ];
+// const validateCreateReviewForASpot = [
+//     check('review')
+//       .exists({ checkFalsy: true })
+//       .withMessage('Review text is required.'),
+//     check('stars')
+//       .exists({ checkFalsy: true })
+//       .isNumeric()
+//       .withMessage('Stars must be an integer from 1 to 5.'),
+//     handleValidationErrors
+//   ];
 
 
-router.put('/:reviewId', requireAuth, validateCreateReviewForASpot, async (req, res) => {
+router.put('/:reviewId', requireAuth, async (req, res) => {
     let currentUser = req.user.id;
     let {review, stars} = req.body
     let foundReview = await Review.findByPk(req.params.reviewId);
