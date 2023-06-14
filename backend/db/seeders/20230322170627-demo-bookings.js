@@ -8,32 +8,34 @@
 
 // module.exports = {
 //   up: async (queryInterface, Sequelize) => {
-//     options.tableName = 'ReviewImages';
+//     options.tableName = 'Bookings';
 //     return queryInterface.bulkInsert(options, [
 //       {
-//         reviewId: 1,
-//         url: 'url1.com'
+//         spotId: 1,
+//         userId: 1,
+//         startDate: "1999-06-03",
+//         startDate: "1999-06-04"
 //       },
 //       {
-//         reviewId: 2,
-//         url: 'url2.com'
+//         spotId: 2,
+//         userId: 2,
+//         startDate: "2000-06-03",
+//         startDate: "2000-06-04"
 //       },
 //       {
-//         reviewId: 3,
-//         url: 'url3.com'
+//         spotId: 3,
+//         userId: 3,
+//         startDate: "2001-06-03",
+//         startDate: "2001-06-04"
 //       }
 //     ], {});
 //   },
 
 //   down: async (queryInterface, Sequelize) => {
-//     options.tableName = 'ReviewImages';
+//     options.tableName = 'Bookings';
 //     const Op = Sequelize.Op;
 //     return queryInterface.bulkDelete(options, {
-//       url: { [Op.in]: ['url1.com', 'url2.com', 'url3.com'] }
+//       startDate: { [Op.in]: ['1999-06-03', '2000-06-03', '2001-06-03'] }
 //     }, {});
 //   }
 // };
-
-
-
-
