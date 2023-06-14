@@ -95,11 +95,6 @@ let endDateTime = new Date(endDate).getTime();
 let today = new Date().getTime();
 
 
-    if (today > endDateTime) {
-        return res.status(403).json({
-            message: "Booking can't be edited to a past date"
-        })
-    }
 
     if (today > new Date(newBookingsToJSON.endDate).getTime()) {
         return res.status(403).json({
