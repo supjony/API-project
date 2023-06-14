@@ -137,5 +137,94 @@ aggregates.reviews = reviews.toJSON().avgRating;
 })
 
 
+router.get('/:spotId', async (req, res) => {
+    let spot = await Spot.findByPk(req.params.spotId);
+    const payload = []
+    spotsObj = {}
+        if (!spot) {
+            res.status(404);
+            res.json({
+
+                message: "Spot couldn't be found"
+
+
+           });
+        }
+
+        const aggregates = {};
+        const reviews = await Review.findOne({
+            attributes: [
+                [
+                    sequelize.fn('AVG', sequelize.col('stars')),
+                    'avgRating'
+                ],
+                [
+                    sequelize.fn('COUNT', sequelize.col('stars')),
+                    'numReviews'
+                ]
+            ],
+            where: { spotId: spot.id }
+        });
+
+        const reviewsCount = await Review.findOne({
+            attributes: [
+
+                [
+                    sequelize.fn('COUNT', sequelize.col('stars')),
+                    'numReviews'
+                ]
+            ],
+            where: { spotId: spot.id }
+        });
+
+        const spotimages = await SpotImage.findAll({
+            attributes: ['id', 'url', 'preview'],
+            where: { spotId: spot.id }
+        })
+
+        // const owner = await User.findOne({
+        //     attributes: ['id', 'firstName', 'lastName'],
+        //     where: { ownerId: user.id }
+        // })
+        let owner = await spot.getUser({
+            attributes: ['id', 'firstName', 'lastName']
+        })
+
+
+aggregates.reviews = reviews.toJSON().avgRating;
+aggregates.reviewsCount = reviews.toJSON().avgRating;
+
+
+
+
+        const spotData = {
+
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            description: spot.description,
+            price: spot.price,
+            createdAt: spot.createdAt,
+            updatedAt: spot.updatedAt,
+            avgRating: aggregates.reviews,
+            numReviews: aggregates.reviewsCount,
+            SpotImages: spotimages,
+            Owner: owner
+
+
+        // payload.push(spotData)
+        // spotsObj['Spots'] = payload
+
+    }
+    res.json(spotData)
+});
+
+
 
 module.exports = router;
