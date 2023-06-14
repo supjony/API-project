@@ -20,7 +20,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
-        references: {model: "Users"},
+        references: {
+          model: "Users",
+          key: 'id'
+        },
       },
       address: {
         type: Sequelize.STRING
