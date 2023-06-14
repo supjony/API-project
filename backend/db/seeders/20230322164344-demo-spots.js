@@ -49,12 +49,16 @@ module.exports = {
     ], {});
   },
 
-  down: async (queryInterface, Sequelize) => {
+  // down: async (queryInterface, Sequelize) => {
+  //   options.tableName = 'Spots';
+  //   const Op = Sequelize.Op;
+  //   return queryInterface.bulkDelete(options, {
+  //     price: { [Op.in]: [1, 2, 3] }
+  //   }, {});
+  // }
+  async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      price: { [Op.in]: [1, 2, 3] }
-    }, {});
+    await queryInterface.bulkDelete(options);
   }
 };
 
