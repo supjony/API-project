@@ -473,18 +473,18 @@ router.get('/:spotId/reviews', async (req, res) => {
 })
 
 
-const validateCreateReviewForASpot = [
-    check('review')
-      .exists({ checkFalsy: true })
-      .withMessage('Review text is required.'),
-    check('stars')
-      .exists({ checkFalsy: true })
-      .isNumeric()
-      .withMessage('Stars must be an integer from 1 to 5.'),
-    handleValidationErrors
-  ];
+// const validateCreateReviewForASpot = [
+//     check('review')
+//       .exists({ checkFalsy: true })
+//       .withMessage('Review text is required.'),
+//     check('stars')
+//       .exists({ checkFalsy: true })
+//       .isNumeric()
+//       .withMessage('Stars must be an integer from 1 to 5.'),
+//     handleValidationErrors
+//   ];
 
-router.post('/:spotId/reviews', requireAuth, validateCreateReviewForASpot, async (req, res) => {
+router.post('/:spotId/reviews', requireAuth, async (req, res) => {
     let currentUserId = req.user.id;
     let spot = await Spot.findByPk(req.params.spotId);
 
