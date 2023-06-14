@@ -324,7 +324,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 
     if (user !== spot.ownerId) {
         return res.status(403).json({
-            message: 'this is not your account to post!',
+            message: 'Forbidden',
         })
     }
 
@@ -363,7 +363,7 @@ router.put('/:spotId', requireAuth, validateCreateASpot, async(req, res) => {
 
     if (user !== spot.ownerId) {
         return res.status(403).json({
-            message: 'this is not your account to edit!',
+            message: 'Forbidden',
         })
     }
 
@@ -397,7 +397,7 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
 
     if (user !== spot.ownerId) {
         return res.status(403).json({
-            message: 'cannot delete posts that are not yours!',
+            message: 'Forbidden',
         })
     }
 
