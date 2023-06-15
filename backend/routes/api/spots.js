@@ -135,16 +135,17 @@ router.get("/", async (req, res, next) => {
 
     let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
 
-    page = parseInt(page);
-    size = parseInt(size);
-    minPrice = parseInt(minPrice);
-    maxPrice = parseInt(maxPrice);
-    minLat = parseInt(minLat);
-    maxLat = parseInt(maxLat);
-    minLng = parseInt(minLng);
-    maxLng = parseInt(maxLng);
+    page = parseInt(page)
+    size = parseInt(size)
+    minPrice = parseInt(minPrice)
+    maxPrice = parseInt(maxPrice)
+    minLat = parseInt(minLat)
+    maxLat = parseInt(maxLat)
+    minLng = parseInt(minLng)
+    maxLng = parseInt(maxLng)
 
     let pagination = {}
+    let where = {}
 
     if (!page) page = 1
     if (!size) size = 20
