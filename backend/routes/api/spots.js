@@ -247,7 +247,7 @@ router.get("/", async (req, res, next) => {
     }
 
     if (maxPrice) {
-        if (maxPrice >= 0) {
+        if (maxPrice <= 5000) {
             where.price = { [Op.between]: [0, maxPrice] }
         } else {
             return res.status(400).json({
