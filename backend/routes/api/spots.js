@@ -261,62 +261,42 @@ router.get("/", async (req, res, next) => {
 
 
 
-    const spots = await Spot.findAll({
-        ...pagination
-    })
-    const payload = []
-    spotsObj = {}
-    for (let i = 0; i < spots.length; i++) {
-        const spot = spots[i];
-        // const reviews = await spot.getReviews()
-        // for (let i = 0; i < reviews.length; i++) {
-        //     const review = reviews[i];
-        const aggregates = {};
-        const reviews = await Review.findOne({
-            attributes: [
-                [
-                    sequelize.fn('AVG', sequelize.col('stars')),
-                    'avgRating'
-                ]
-            ],
-            where: { spotId: spot.id }
-        });
 
 
-aggregates.reviews = reviews.toJSON().avgRating;
 
-        const previewImage = await SpotImage.findOne({
-            attributes: ['url'],
-            where: { spotId: spot.id }
+        const spots = await Spot.findAll({
+            include: [{
+                 model: SpotImage
+                }],
+            ...pagination
         })
-
-
-
-        const spotData = {
-
-            id: spot.id,
-            ownerId: spot.ownerId,
-            address: spot.address,
-            city: spot.city,
-            state: spot.state,
-            country: spot.country,
-            lat: spot.lat,
-            lng: spot.lng,
-            name: spot.name,
-            description: spot.description,
-            price: spot.price,
-            createdAt: spot.createdAt,
-            updatedAt: spot.updatedAt,
-            avgRating: aggregates.reviews,
-            previewImage: previewImage.url
+        let spotsArr = []
+        for (let spot of spots) {
+            spotsArr.push(spot.toJSON())
+        }
+        for (let spot of spotsArr) {
+            const reviewsBySpot = await Review.findOne({
+                where: {
+                    spotId: spot.id
+                },
+                attributes: [[sequelize.fn('AVG', sequelize.col("stars")), "avgRating"]]
+            })
+            let spotAvg = reviewsBySpot.toJSON().avgRating
+            if (spotAvg) {
+                spot.avgRating = spotAvg
+            } else {
+                spot.avgRating = "null"
+            }
+            spot.avgRating
+            for (let image of spot.SpotImages) {
+                if (image.preview) {
+                    spot.previewImage = image.url
+                }
+            }
 
         }
-        payload.push(spotData)
-        spotsObj['Spots'] = payload
-    // }
-    }
-    res.json(spotsObj, page, size)
-})
+        res.json({ Spots: spotsArr, page, size })
+        })
 
 
 router.get('/:spotId', async (req, res) => {
