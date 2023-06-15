@@ -132,7 +132,138 @@ aggregates.reviews = reviews.toJSON().avgRating;
 
 
 router.get("/", async (req, res, next) => {
-    const spots = await Spot.findAll()
+
+    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
+
+    page = parseInt(page);
+    size = parseInt(size);
+    minPrice = parseInt(minPrice);
+    maxPrice = parseInt(maxPrice);
+    minLat = parseInt(minLat);
+    maxLat = parseInt(maxLat);
+    minLng = parseInt(minLng);
+    maxLng = parseInt(maxLng);
+
+    let pagination = {}
+
+    if (!page) page = 1
+    if (!size) size = 20
+
+
+    if (page < 1) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+              "Page": "Page must be greater than or equal to 1",}
+            })
+        }
+
+
+
+        if (size < 1) {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                  "Size": "Size must be greater than or equal to 1",}
+                })
+        }
+
+
+
+
+    pagination.limit = size
+    pagination.offset = size * (page - 1)
+
+
+    if (maxLat && Number.isInteger(maxLat)) {
+        if (maxLat <= 200) {
+            where.lat = { [Op.between]: [-200, maxLat] }
+        }
+        else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "maxLat": "Maximum latitude is invalid"
+                }
+            })
+        }
+    }
+
+    if (minLat && Number.isInteger(maxLat)) {
+        if (minLat >= -200) {
+            where.lat = { [Op.between]: [minLat, 200] }
+        }
+        else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "minLat": "Maximum latitude is invalid"
+                }
+            })
+        }
+    }
+
+    if (maxLng && Number.isInteger(maxLng)) {
+        if (maxLng <= 200) {
+            where.lng = { [Op.between]: [-200, maxLng] }
+        }
+        else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "maxLng": "Maximum longitude is invalid"
+                }
+            })
+        }
+    }
+
+    if (minLng && Number.isInteger(minLng)) {
+        if (minLng >= -200) {
+            where.lng = { [Op.between]: [minLng, 200] }
+        }
+        else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "minLng": "Maximum longitude is invalid"
+                }
+            })
+        }
+    }
+
+    if (minPrice) {
+        if (minPrice >= 0) {
+            where.price = { [Op.between]: [minPrice, 5000] }
+        } else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "minPrice": "Minimum price must be greater than or equal to 0",
+                }
+            })
+        }
+    }
+
+    if (maxPrice) {
+        if (maxPrice >= 0) {
+            where.price = { [Op.between]: [0, maxPrice] }
+        } else {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "minPrice": "Minimum price must be greater than or equal to 0",
+                }
+            })
+        }
+    }
+
+
+
+
+
+    const spots = await Spot.findAll({
+        ...pagination
+    })
     const payload = []
     spotsObj = {}
     for (let i = 0; i < spots.length; i++) {
@@ -184,7 +315,7 @@ aggregates.reviews = reviews.toJSON().avgRating;
         spotsObj['Spots'] = payload
     // }
     }
-    res.json(spotsObj)
+    res.json(spotsObj, page, size)
 })
 
 
@@ -496,7 +627,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
           })
     }
 
-   
+
 
     if (review === ''){
         return res.status(400).json({
