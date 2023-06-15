@@ -178,8 +178,8 @@ router.get("/", async (req, res, next) => {
 
 
     if (maxLat && Number.isInteger(maxLat)) {
-        if (maxLat <= 200) {
-            where.lat = { [Op.between]: [-200, maxLat] }
+        if (maxLat <= 500) {
+            where.lat = { [Op.lte]: maxLat }
         }
         else {
             return res.status(400).json({
@@ -191,23 +191,23 @@ router.get("/", async (req, res, next) => {
         }
     }
 
-    if (minLat && Number.isInteger(maxLat)) {
-        if (minLat >= -200) {
-            where.lat = { [Op.between]: [minLat, 200] }
+    if (minLat && Number.isInteger(minLat)) {
+        if (minLat >= 0) {
+            where.lat = { [Op.gte]: minLat }
         }
         else {
             return res.status(400).json({
                 "message": "Bad Request",
                 "errors": {
-                    "minLat": "Maximum latitude is invalid"
+                    "minLat": "Minimum latitude is invalid"
                 }
             })
         }
     }
 
     if (maxLng && Number.isInteger(maxLng)) {
-        if (maxLng <= 200) {
-            where.lng = { [Op.between]: [-200, maxLng] }
+        if (maxLng <= 500) {
+            where.lng = { [Op.lte]: maxLng }
         }
         else {
             return res.status(400).json({
@@ -220,14 +220,14 @@ router.get("/", async (req, res, next) => {
     }
 
     if (minLng && Number.isInteger(minLng)) {
-        if (minLng >= -200) {
-            where.lng = { [Op.between]: [minLng, 200] }
+        if (minLng >= 0) {
+            where.lng = { [Op.gte]: minLng }
         }
         else {
             return res.status(400).json({
                 "message": "Bad Request",
                 "errors": {
-                    "minLng": "Maximum longitude is invalid"
+                    "minLng": "Minimum longitude is invalid"
                 }
             })
         }
@@ -235,7 +235,7 @@ router.get("/", async (req, res, next) => {
 
     if (minPrice && Number.isInteger(minPrice)) {
         if (minPrice >= 0) {
-            where.price = { [Op.between]: [minPrice, 500] }
+            where.price = { [Op.gte]: minPrice }
         } else {
             return res.status(400).json({
                 "message": "Bad Request",
@@ -247,8 +247,8 @@ router.get("/", async (req, res, next) => {
     }
 
     if (maxPrice && Number.isInteger(maxPrice)) {
-        if (maxPrice <= 500) {
-            where.price = { [Op.between]: [0, maxPrice] }
+        if (maxPrice >= 0) {
+            where.price = { [Op.lte]: maxPrice }
         } else {
             return res.status(400).json({
                 "message": "Bad Request",
