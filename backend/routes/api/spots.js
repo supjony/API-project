@@ -270,6 +270,7 @@ router.get("/", async (req, res, next) => {
             include: [{
                  model: SpotImage
                 }],
+                where,
             ...pagination
         })
         let spotsArr = []
