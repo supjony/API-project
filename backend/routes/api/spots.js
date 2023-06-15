@@ -293,6 +293,7 @@ router.get("/", async (req, res, next) => {
                     spot.previewImage = image.url
                 }
             }
+            delete spot.SpotImages
 
         }
         res.json({ Spots: spotsArr, page, size })
