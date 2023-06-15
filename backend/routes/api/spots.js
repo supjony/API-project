@@ -233,7 +233,7 @@ router.get("/", async (req, res, next) => {
         }
     }
 
-    if (minPrice) {
+    if (minPrice && Number.isInteger(minPrice)) {
         if (minPrice >= 0) {
             where.price = { [Op.between]: [minPrice, 5000] }
         } else {
@@ -246,8 +246,8 @@ router.get("/", async (req, res, next) => {
         }
     }
 
-    if (maxPrice) {
-        if (maxPrice <= 5000) {
+    if (maxPrice && Number.isInteger(maxPrice)) {
+        if (maxPrice >= 0) {
             where.price = { [Op.between]: [0, maxPrice] }
         } else {
             return res.status(400).json({
