@@ -246,9 +246,23 @@ router.get("/", async (req, res, next) => {
         }
     }
 
+    // if (maxPrice && Number.isInteger(maxPrice)) {
+    //     if (maxPrice <= 500) {
+    //         where.price = { [Op.between]: [0, maxPrice] }
+    //     } else {
+    //         return res.status(400).json({
+    //             "message": "Bad Request",
+    //             "errors": {
+    //                 "minPrice": "Minimum price must be greater than or equal to 0",
+    //             }
+    //         })
+    //     }
+    // }
+
+
     if (maxPrice && Number.isInteger(maxPrice)) {
         if (maxPrice <= 500) {
-            where.price = { [Op.between]: [0, maxPrice] }
+            where.price = { [Op.like]: maxPrice }
         } else {
             return res.status(400).json({
                 "message": "Bad Request",
@@ -258,7 +272,6 @@ router.get("/", async (req, res, next) => {
             })
         }
     }
-
 
 
 
