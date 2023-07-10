@@ -1,33 +1,33 @@
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { getSingleSpotThunk } from '../../store/spotReducer';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+// import { useSelector } from 'react-redux';
+// import { getSingleSpotThunk } from '../../store/spotReducer';
+// import { useDispatch } from 'react-redux';
+// import { useEffect } from 'react';
 
 
-const SingleSpot = ({spots}) => {
-    console.log('hello')
+// const SingleSpot = ({spots}) => {
+//     console.log('hello')
 
 
-  const dispatch = useDispatch();
-  const spot = useSelector(state=>state.spots);
+//   const dispatch = useDispatch();
+//   const spot = useSelector(state=>state.spots);
 
-  useEffect(() => {
-    dispatch(getSingleSpotThunk());
-  }, [dispatch]);
+//   useEffect(() => {
+//     dispatch(getSingleSpotThunk());
+//   }, [dispatch]);
 
-  const { id } = useParams()
-  const singleSpot = spots.find((spot) => spot.id === id)
+//   const { id } = useParams()
+//   const singleSpot = spots.find((spot) => spot.id === id)
 
 
-  if(!spot.length > 0) return null
+//   if(!spot.length > 0) return null
 
-  return (
-    <div className='singleArticle'>
-      <h1>{singleSpot.name}</h1>
+//   return (
+//     <div className='singleArticle'>
+//       <h1>{singleSpot.name}</h1>
 
-    </div>
-  );
-};
+//     </div>
+//   );
+// };
 
-export default SingleSpot;
+// export default SingleSpot;
